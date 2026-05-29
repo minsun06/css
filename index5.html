@@ -1,96 +1,873 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>터치 그림자 효과</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CampusLink Pro</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+<style>
+:root {
+    --primary:#6366f1;
+    --primary-dark:#4f46e5;
+    --mint:#0d9488;
+    --danger:#f43f5e;
+    --sidebar:#0f172a;
+    --bg:#eef2ff;
+    --card-bg:rgba(255,255,255,.86);
+    --text-main:#1e293b;
+    --text-sub:#64748b;
+    --zone-bg:#f8fafc;
+}
+
+* {
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;
+    -webkit-tap-highlight-color:transparent;
+}
+
+body {
+    min-height:100vh;
+    display:flex;
+    color:var(--text-main);
+    overflow-x:hidden;
+    background:
+        radial-gradient(circle at top left, rgba(99,102,241,.22), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(13,148,136,.18), transparent 34%),
+        linear-gradient(135deg,#f8fafc,#eef2ff);
+}
+
+/* 사이드바 */
+#sidebar {
+    width:280px;
+    flex-shrink:0;
+    padding:34px 20px;
+    color:#f8fafc;
+    background:linear-gradient(180deg,#0f172a,#1e1b4b);
+    box-shadow:14px 0 40px rgba(15,23,42,.22);
+    position:relative;
+    overflow:hidden;
+}
+
+#sidebar::before {
+    content:"";
+    position:absolute;
+    width:220px;
+    height:220px;
+    top:-80px;
+    right:-90px;
+    background:rgba(99,102,241,.28);
+    border-radius:50%;
+    filter:blur(8px);
+}
+
+#logo {
+    position:relative;
+    font-size:27px;
+    font-weight:900;
+    margin-bottom:8px;
+    letter-spacing:-.5px;
+}
+
+#logo span {
+    color:#a5b4fc;
+}
+
+.sub-title {
+    position:relative;
+    font-size:12px;
+    color:#94a3b8;
+    margin-bottom:24px;
+    font-weight:700;
+}
+
+#cert-list {
+    position:relative;
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+#cert-list li {
+    padding:13px 14px;
+    font-size:14px;
+    cursor:pointer;
+    border-radius:16px;
+    color:#cbd5e1;
+    background:rgba(255,255,255,.04);
+    transition:.22s ease;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+#cert-list li:hover {
+    color:white;
+    transform:translateX(7px);
+    background:rgba(255,255,255,.1);
+}
+
+#cert-list li.active {
+    color:white;
+    background:linear-gradient(135deg,#6366f1,#8b5cf6);
+    box-shadow:0 14px 28px rgba(99,102,241,.42);
+}
+
+/* 메인 */
+#main-content {
+    flex-grow:1;
+    width:100%;
+    max-width:1240px;
+    padding:28px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+    position:relative;
+}
+
+/* 카드 */
+.card {
+    width:100%;
+    padding:22px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    border-radius:28px;
+    background:var(--card-bg);
+    backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.72);
+    box-shadow:
+        0 20px 45px rgba(15,23,42,.07),
+        0 5px 15px rgba(99,102,241,.06);
+    animation:cardUp .55s ease both;
+    transition:.25s ease;
+}
+
+.card:hover {
+    transform:translateY(-4px);
+    box-shadow:
+        0 28px 65px rgba(99,102,241,.15),
+        0 10px 22px rgba(15,23,42,.08);
+}
+
+.card:nth-child(2) { animation-delay:.08s; }
+.card:nth-child(3) { animation-delay:.16s; }
+
+@keyframes cardUp {
+    from {
+        opacity:0;
+        transform:translateY(18px);
     }
+    to {
+        opacity:1;
+        transform:translateY(0);
+    }
+}
 
+/* 검색 */
+.search-bar {
+    display:flex;
+    gap:12px;
+    align-items:center;
+    width:100%;
+}
+
+.search-bar label,
+.form-group label,
+.select-row label {
+    color:#334155;
+    font-size:14px;
+    font-weight:800;
+}
+
+input,
+select {
+    width:100%;
+    min-width:0;
+    padding:13px 15px;
+    border:none;
+    border-radius:16px;
+    background:#f8fafc;
+    color:#1e293b;
+    font-size:14px;
+    box-shadow:
+        inset 0 0 0 1px #e2e8f0,
+        0 4px 10px rgba(15,23,42,.03);
+    transition:.22s ease;
+}
+
+input:focus,
+select:focus {
+    outline:none;
+    background:white;
+    box-shadow:
+        0 0 0 4px rgba(99,102,241,.16),
+        inset 0 0 0 1px rgba(99,102,241,.35);
+}
+
+/* 버튼 */
+.btn,
+.btn-link {
+    position:relative;
+    overflow:hidden;
+    border:none;
+    border-radius:17px;
+    padding:13px 18px;
+    font-weight:900;
+    cursor:pointer;
+    color:white;
+    font-size:14px;
+    text-align:center;
+    white-space:nowrap;
+    text-decoration:none;
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        filter .18s ease;
+}
+
+.btn::before,
+.btn-link::before {
+    content:"";
+    position:absolute;
+    top:-60%;
+    left:-60%;
+    width:220%;
+    height:220%;
+    background:radial-gradient(circle,rgba(255,255,255,.34),transparent 58%);
+    transform:scale(0);
+    transition:.38s ease;
+}
+
+.btn:hover::before,
+.btn-link:hover::before {
+    transform:scale(1);
+}
+
+.btn:hover,
+.btn-link:hover {
+    transform:translateY(-3px);
+    filter:brightness(1.05);
+}
+
+.btn:active,
+.btn-link:active {
+    transform:scale(.94);
+}
+
+.btn-primary {
+    background:linear-gradient(135deg,#6366f1,#8b5cf6);
+    box-shadow:0 12px 24px rgba(99,102,241,.34);
+}
+
+.btn-mint {
+    background:linear-gradient(135deg,#0d9488,#14b8a6);
+    box-shadow:0 12px 24px rgba(13,148,136,.3);
+}
+
+.btn-reset {
+    background:linear-gradient(135deg,#64748b,#475569);
+    box-shadow:0 12px 24px rgba(71,85,105,.24);
+}
+
+.btn-link {
+    display:block;
+    width:100%;
+    background:#cbd5e1;
+    color:#334155;
+    box-shadow:0 10px 22px rgba(15,23,42,.08);
+}
+
+.btn-link.active {
+    color:white;
+    background:linear-gradient(135deg,#6366f1,#8b5cf6);
+    box-shadow:0 14px 28px rgba(99,102,241,.35);
+}
+
+/* 정보 박스 */
+#info-display,
+#recommend-output {
+    width:100%;
+    border-radius:22px;
+    padding:16px;
+    background:rgba(248,250,252,.92);
+    border:1px solid rgba(226,232,240,.75);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.9),
+        0 8px 20px rgba(15,23,42,.04);
+}
+
+.info-header {
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+    font-size:13px;
+    font-weight:900;
+    margin-bottom:10px;
+}
+
+#cert-date-output,
+#recommend-output {
+    font-size:13px;
+    white-space:pre-line;
+    line-height:1.7;
+    color:#475569;
+}
+
+#recommend-output {
+    min-height:120px;
+}
+
+/* 폼 */
+.fieldset {
+    border:none;
+    border-radius:24px;
+    padding:18px;
+    background:rgba(248,250,252,.72);
+    box-shadow:inset 0 0 0 1px rgba(226,232,240,.78);
+}
+
+.fieldset-title {
+    font-weight:900;
+    font-size:15px;
+    margin-bottom:14px;
+    color:#1e293b;
+}
+
+.grid-3 {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+}
+
+.form-group,
+.select-row {
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    font-size:13px;
+}
+
+#spec-panel {
+    background:linear-gradient(135deg,#eef2ff,#f8fafc);
+    padding:18px;
+    border-radius:22px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.checkbox-group {
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.checkbox-group label {
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:11px 13px;
+    border-radius:16px;
+    font-size:14px;
+    cursor:pointer;
+    background:rgba(255,255,255,.68);
+    box-shadow:0 6px 16px rgba(15,23,42,.04);
+    transition:.2s ease;
+}
+
+.checkbox-group label:hover {
+    transform:translateY(-2px);
+    background:white;
+    box-shadow:0 12px 22px rgba(99,102,241,.13);
+}
+
+.checkbox-group input[type="checkbox"] {
+    width:17px;
+    height:17px;
+    accent-color:#6366f1;
+}
+
+/* 점수판 */
+.score-board {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    text-align:center;
+}
+
+.score-box {
+    padding:18px;
+    border-radius:24px;
+    color:white;
+    font-weight:900;
+    font-size:15px;
+    transition:.25s ease;
+}
+
+.score-box:hover {
+    transform:translateY(-4px) scale(1.01);
+}
+
+.score-total {
+    background:linear-gradient(135deg,#6366f1,#818cf8);
+    box-shadow:0 18px 34px rgba(99,102,241,.3);
+}
+
+.score-left {
+    background:linear-gradient(135deg,#f43f5e,#fb7185);
+    box-shadow:0 18px 34px rgba(244,63,94,.28);
+}
+
+.action-bar {
+    display:flex;
+    justify-content:flex-end;
+    gap:12px;
+}
+
+/* 모바일 우측 버튼 */
+.mobile-side-btn {
+    box-shadow:
+        -8px 8px 24px rgba(15,23,42,.22),
+        0 0 22px rgba(99,102,241,.25);
+}
+
+#btn-search { top:22%; }
+#btn-recommend { top:40%; }
+
+/* 모바일 */
+@media (max-width:768px) {
     body {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      font-family: Arial, sans-serif;
+        flex-direction:column;
     }
 
-    .touch-card {
-      position: relative;
-      padding: 20px 42px;
-      border: none;
-      border-radius: 22px;
-      background: linear-gradient(135deg, #7c3aed, #ec4899);
-      color: white;
-      font-size: 20px;
-      font-weight: 700;
-      cursor: pointer;
-      overflow: hidden;
-
-      box-shadow:
-        0 12px 25px rgba(124, 58, 237, 0.35),
-        0 6px 18px rgba(236, 72, 153, 0.25);
-
-      transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        filter 0.2s ease;
-
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
+    #sidebar {
+        width:100%;
+        padding:24px 16px 18px;
+        text-align:center;
+        border-radius:0 0 28px 28px;
     }
 
-    .touch-card::before {
-      content: "";
-      position: absolute;
-      top: -60%;
-      left: -60%;
-      width: 220%;
-      height: 220%;
-      background: radial-gradient(
-        circle,
-        rgba(255, 255, 255, 0.35) 0%,
-        transparent 60%
-      );
-      transform: scale(0);
-      transition: transform 0.45s ease;
+    #logo {
+        font-size:25px;
     }
 
-    .touch-card:hover {
-      transform: translateY(-5px);
-      filter: brightness(1.08);
-      box-shadow:
-        0 20px 40px rgba(124, 58, 237, 0.45),
-        0 12px 30px rgba(236, 72, 153, 0.38);
+    .sub-title {
+        margin-bottom:16px;
     }
 
-    .touch-card:hover::before {
-      transform: scale(1);
+    #cert-list {
+        flex-direction:row;
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:8px;
     }
 
-    .touch-card:active {
-      transform: scale(0.95) translateY(2px);
-      box-shadow:
-        0 6px 14px rgba(124, 58, 237, 0.3),
-        0 3px 8px rgba(236, 72, 153, 0.2);
+    #cert-list li {
+        padding:9px 11px;
+        font-size:12px;
+        border-radius:999px;
     }
 
-    .touch-card span {
-      position: relative;
-      z-index: 2;
+    #cert-list li:hover {
+        transform:translateY(-2px);
     }
-  </style>
+
+    #main-content {
+        padding:14px;
+        padding-right:52px;
+        gap:15px;
+    }
+
+    .card {
+        padding:16px;
+        border-radius:24px;
+    }
+
+    .search-bar {
+        flex-direction:column;
+        align-items:stretch;
+        gap:9px;
+    }
+
+    .search-bar label {
+        min-width:auto !important;
+        text-align:left;
+    }
+
+    .search-bar .btn {
+        position:fixed;
+        right:0;
+        z-index:9999;
+        writing-mode:vertical-rl;
+        width:auto;
+        padding:16px 9px;
+        border-radius:18px 0 0 18px;
+        font-size:13px;
+        letter-spacing:1px;
+    }
+
+    .grid-3,
+    .score-board {
+        grid-template-columns:1fr;
+    }
+
+    .checkbox-group {
+        flex-direction:column;
+    }
+
+    .action-bar {
+        flex-direction:column;
+    }
+
+    .action-bar .btn {
+        width:100%;
+        padding:15px;
+        font-size:15px;
+        white-space:normal;
+    }
+
+    .info-header {
+        flex-direction:column;
+    }
+}
+</style>
 </head>
 
 <body>
-  <button class="touch-card">
-    <span>터치하세요 ✨</span>
-  </button>
+
+<div id="sidebar">
+    <div id="logo">CAMPUS<span>LINK</span></div>
+    <div class="sub-title">터치 시 실시간 자동 연동</div>
+    <ul id="cert-list"></ul>
+</div>
+
+<div id="main-content">
+    <div class="card">
+        <div class="search-bar">
+            <label style="min-width:80px;">자격증 검색</label>
+            <input type="text" id="txt-search" placeholder="자격증 이름을 입력하세요">
+            <button class="btn btn-primary mobile-side-btn" id="btn-search">일정 조회</button>
+        </div>
+
+        <div id="info-display">
+            <div class="info-header">
+                <span id="lbl-res-name">자격증 목록을 누르거나 검색창에 입력해 주세요.</span>
+                <span id="lbl-res-cat" style="color:#64748b;">분류 등급: -</span>
+                <span id="lbl-res-cost" style="color:#64748b;">표준 응시료: -</span>
+            </div>
+            <div id="cert-date-output">시험 세부 연간 일정이 여기에 표시됩니다.</div>
+        </div>
+
+        <a href="#" id="btn-go-web" class="btn-link" target="_blank">공식 접수 기관 링크 바로가기</a>
+    </div>
+
+    <div class="card">
+        <div class="search-bar">
+            <label style="min-width:120px;">소속 학과 명칭 입력</label>
+            <input type="text" id="txt-dept" value="컴퓨터공학과">
+            <button class="btn btn-mint mobile-side-btn" id="btn-recommend">추천 엔진 실행</button>
+        </div>
+        <div id="recommend-output">학과별 연계 자격증 및 학점은행 특화 스케줄 로드맵이 다각도로 분석 제안됩니다.</div>
+    </div>
+
+    <div class="card">
+        <div class="fieldset">
+            <div class="fieldset-title">1. 기본 학사 정보 및 기준 설정</div>
+            <div class="grid-3">
+                <div class="form-group">
+                    <label>자기 대학교 및 기관명:</label>
+                    <input type="text" id="txt-univ" value="동국대듀이카">
+                </div>
+                <div class="form-group">
+                    <label>이수 완료 학기 수:</label>
+                    <input type="number" id="txt-semester" value="3">
+                </div>
+                <div class="form-group">
+                    <label>기타 수강 과목 개별 이수학점 합계:</label>
+                    <input type="number" id="txt-subject-credits" value="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="fieldset">
+            <div class="fieldset-title">2. 보유 학점인정 스펙 설정</div>
+            <div id="spec-panel">
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="chk-net2"> 네트워크관리사 2급 (14학점)</label>
+                    <label><input type="checkbox" id="chk-admin2"> 행정관리사 2급 (20학점)</label>
+                    <label><input type="checkbox" id="chk-admin3"> 행정관리사 3급 (14학점)</label>
+                    <label><input type="checkbox" id="chk-adsp"> ADsP 데이터분석준전문가 (14학점)</label>
+                    <label><input type="checkbox" id="chk-complit2"> 컴퓨터활용능력 2급 (6학점)</label>
+                </div>
+
+                <div class="select-row">
+                    <label>독학사 1단계 합격 과목수 선택:</label>
+                    <select id="combo-self1">
+                        <option value="0">0과목 이수 (0학점)</option>
+                        <option value="4">1과목 합격 (4학점)</option>
+                        <option value="8">2과목 합격 (8학점)</option>
+                        <option value="12">3과목 합격 (12학점)</option>
+                        <option value="16">4과목 합격 (16학점)</option>
+                        <option value="20">5과목 최고상한 합격 (20학점)</option>
+                    </select>
+                </div>
+
+                <div class="select-row">
+                    <label>독학사 2단계 패스 과목수 선택:</label>
+                    <select id="combo-self2">
+                        <option value="0">0과목 이수 (0학점)</option>
+                        <option value="5">1과목 합격 (5학점)</option>
+                        <option value="10">2과목 합격 (10학점)</option>
+                        <option value="15">3과목 합격 (15학점)</option>
+                        <option value="20">4과목 합격 (20학점)</option>
+                        <option value="25">5과목 합격 (25학점)</option>
+                        <option value="30">6과목 최고상한 합격 (30학점)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="score-board">
+            <div class="score-box score-total" id="lbl-total-score">현재 누적 취득: 0 / 140 학점</div>
+            <div class="score-box score-left" id="lbl-left-score">졸업까지 남은 잔여 학점: 140 학점</div>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn btn-reset" id="btn-reset">전체 리셋</button>
+            <button class="btn btn-primary" id="btn-calculate">학점 연산 엔진 가동</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const repository = [
+    { name:"토익", category:"민간/국제 자격", cost:"48,000원", date:"■ 정기 시험 일정 안내\n - 상시 격주 일요일 시행\n - YBM 어학시험 공식 일정 참고", url:"https://exam.ybmnet.co.kr/toeic/" },
+    { name:"네트워크관리사 2급", category:"국가공인 자격", cost:"필기 43,000원 / 실기 78,000원", date:"■ 정기 시험 일정 안내\n - 학점은행제 14학점 인정 자격\n - 1회 필기: 04월 / 실기: 05월\n - 2회 필기: 07월 / 실기: 08월", url:"https://www.icqa.or.kr/" },
+    { name:"컴퓨터활용능력 2급", category:"국가공인 자격", cost:"필기 20,000원 / 실기 24,000원", date:"■ 상시 시험 일정 안내\n - 학점은행제 6학점 인정 자격\n - 매주 상시 개설", url:"https://license.korcham.net/" },
+    { name:"ADsP", category:"국가공인 자격", cost:"50,000원", date:"■ 정기 시험 일정 안내\n - 학점은행제 14학점 인정 자격\n - 1회: 03월 / 2회: 05월 / 3회: 08월 / 4회: 11월", url:"https://www.dataq.or.kr/" },
+    { name:"행정관리사 2급", category:"국가공인 자격", cost:"홈페이지 참고", date:"■ 정기 시험 일정 안내\n - 학점은행제 20학점 고효율 가산 자격\n - 한국행정관리협회 일정 참고", url:"http://www.kama.in/" },
+    { name:"행정관리사 3급", category:"국가공인 자격", cost:"홈페이지 참고", date:"■ 정기 시험 일정 안내\n - 학점은행제 14학점 인정 자격", url:"http://www.kama.in/" },
+    { name:"정보처리기사", category:"국가공인 자격", cost:"필기 19,400원 / 실기 22,600원", date:"■ 정기 기사 일정 안내\n - 학점은행제 학사 취득 시 20학점 인정 대형 자격", url:"https://www.q-net.or.kr/" },
+    { name:"SQLD", category:"민간/국제 자격", cost:"50,000원", date:"■ 데이터 자격검정 시험 안내\n - 전공 역량 필수 자격", url:"https://www.dataq.or.kr/" }
+];
+
+let selectedCert = null;
+
+const certListUl = document.getElementById('cert-list');
+const txtSearch = document.getElementById('txt-search');
+const btnSearch = document.getElementById('btn-search');
+const lblResName = document.getElementById('lbl-res-name');
+const lblResCat = document.getElementById('lbl-res-cat');
+const lblResCost = document.getElementById('lbl-res-cost');
+const certDateOutput = document.getElementById('cert-date-output');
+const btnGoWeb = document.getElementById('btn-go-web');
+const txtDept = document.getElementById('txt-dept');
+const btnRecommend = document.getElementById('btn-recommend');
+const recommendOutput = document.getElementById('recommend-output');
+
+for (let i = 0; i < repository.length; i++) {
+    const li = document.createElement('li');
+    li.textContent = repository[i].name;
+
+    li.addEventListener('click', function () {
+        const siblings = certListUl.querySelectorAll('li');
+        for (let j = 0; j < siblings.length; j++) {
+            siblings[j].classList.remove('active');
+        }
+
+        li.classList.add('active');
+        txtSearch.value = repository[i].name;
+        btnSearch.click();
+    });
+
+    certListUl.appendChild(li);
+}
+
+btnSearch.addEventListener('click', function () {
+    const keyword = txtSearch.value.trim().replace(/\s+/g, "").toLowerCase();
+
+    if (!keyword) {
+        alert("조회할 자격증 이름을 입력해 주세요.");
+        return;
+    }
+
+    selectedCert = null;
+
+    for (let i = 0; i < repository.length; i++) {
+        if (repository[i].name.replace(/\s+/g, "").toLowerCase() === keyword) {
+            selectedCert = repository[i];
+            break;
+        }
+    }
+
+    if (selectedCert) {
+        lblResName.textContent = "■ " + selectedCert.name;
+        lblResCat.textContent = "분류: " + selectedCert.category;
+        lblResCost.textContent = "응시 비용: " + selectedCert.cost;
+        certDateOutput.textContent = selectedCert.date;
+        btnGoWeb.href = selectedCert.url;
+        btnGoWeb.classList.add('active');
+        btnGoWeb.style.pointerEvents = "auto";
+    } else {
+        lblResName.textContent = "조회 결과 없음";
+        lblResCat.textContent = "분류: -";
+        lblResCost.textContent = "응시료: -";
+        certDateOutput.textContent = `'${txtSearch.value}' 자격증은 저장소에 존재하지 않습니다.`;
+        btnGoWeb.href = "#";
+        btnGoWeb.classList.remove('active');
+        btnGoWeb.style.pointerEvents = "none";
+    }
+});
+
+btnRecommend.addEventListener('click', function () {
+    const dept = txtDept.value.trim();
+    const univ = document.getElementById('txt-univ').value.trim();
+
+    if (!dept) {
+        alert("학과명을 입력해 주세요.");
+        return;
+    }
+
+    let outText = `▶ [${univ} - ${dept}] 학점은행제 최적 스케줄 로드맵\n\n`;
+
+    if (univ.includes("듀이카") || univ.includes("동국대듀이카")) {
+        outText += "※ 동국대학교 듀이카 학점은행제 패스트트랙 조기 졸업 최적화 알고리즘 가동 상태입니다.\n\n";
+    }
+
+    let found = false;
+
+    if (/[컴퓨터|소프트웨어|정보통신|IT|멀티미디어]/.test(dept)) {
+        outText += "[1순위 추천 전공 자격증 조합]\n";
+        outText += " • 행정관리사 2급: 20학점\n";
+        outText += " • 네트워크관리사 2급: 14학점\n";
+        outText += " • ADsP: 14학점\n";
+        outText += " • 컴퓨터활용능력 2급: 6학점\n\n";
+        outText += "[핵심 전략]\n - 3학기 63학점 기준, 고효율 자격증 3개 조합으로 자격증 학점 48점 확보 가능";
+        found = true;
+    }
+
+    if (/[경영|통계|경제|회계]/.test(dept)) {
+        outText += "[경영 계열 추천 포트폴리오]\n";
+        outText += " • 행정관리사 2급 + 행정관리사 3급\n";
+        outText += " • ADsP\n";
+        outText += " • 컴퓨터활용능력 2급\n";
+        found = true;
+    }
+
+    if (!found) {
+        outText += "[공통 추천]\n • 행정관리사 2급과 컴퓨터활용능력 2급을 우선 추천합니다.";
+    }
+
+    recommendOutput.textContent = outText;
+});
+
+document.getElementById('btn-calculate').addEventListener('click', function () {
+    const univName = document.getElementById('txt-univ').value.trim();
+    const semesterCount = parseInt(document.getElementById('txt-semester').value) || 0;
+    const subjectCredits = parseInt(document.getElementById('txt-subject-credits').value) || 0;
+
+    let totalSum = 0;
+
+    if (univName.includes("동국대듀이카") || univName.includes("듀이카")) {
+        totalSum += semesterCount * 21;
+    } else {
+        totalSum += semesterCount * 18;
+    }
+
+    totalSum += subjectCredits;
+
+    if (document.getElementById('chk-net2').checked) totalSum += 14;
+    if (document.getElementById('chk-admin2').checked) totalSum += 20;
+    if (document.getElementById('chk-admin3').checked) totalSum += 14;
+    if (document.getElementById('chk-adsp').checked) totalSum += 14;
+    if (document.getElementById('chk-complit2').checked) totalSum += 6;
+
+    totalSum += parseInt(document.getElementById('combo-self1').value) || 0;
+    totalSum += parseInt(document.getElementById('combo-self2').value) || 0;
+
+    let leftCredits = 140 - totalSum;
+    if (leftCredits < 0) leftCredits = 0;
+
+    document.getElementById('lbl-total-score').textContent = `현재 누적 취득: ${totalSum} / 140 학점`;
+    document.getElementById('lbl-left-score').textContent = `졸업까지 남은 잔여 학점: ${leftCredits} 학점`;
+
+    let advice = "\n----------------------------------------\n[실시간 부족 학점 보충 리포트]\n";
+
+    if (leftCredits === 0) {
+        advice += "▶ 축하합니다! 140학점 조건을 완수했습니다.";
+    } else {
+        const reqSelf1 = Math.ceil(leftCredits / 4);
+        const reqSelf2 = Math.ceil(leftCredits / 5);
+
+        advice += `▶ 부족 학점: ${leftCredits}학점\n\n`;
+        advice += `① 독학사 1단계 기준: ${reqSelf1 > 5 ? "5과목 상한 초과" : reqSelf1 + "과목"}\n`;
+        advice += `② 독학사 2단계 기준: ${reqSelf2 > 6 ? "6과목 상한 초과" : reqSelf2 + "과목"}\n`;
+
+        const recCerts = [];
+
+        if (!document.getElementById('chk-admin2').checked) recCerts.push("행정관리사 2급");
+        if (!document.getElementById('chk-net2').checked) recCerts.push("네트워크관리사 2급");
+        if (!document.getElementById('chk-adsp').checked) recCerts.push("ADsP");
+
+        if (recCerts.length > 0) {
+            advice += `③ 추천 자격증: ${recCerts.join(", ")}`;
+        } else {
+            advice += "③ 주요 고효율 자격증을 이미 선택했습니다.";
+        }
+    }
+
+    const baseClassCredits = univName.includes("듀이카") ? semesterCount * 21 : semesterCount * 18;
+
+    alert(
+        `■ [${univName}] 학점 시뮬레이션 결과 ■\n\n` +
+        `• 정규 수업 환산 학점: ${baseClassCredits} 학점\n` +
+        `• 자격증/독학사 가산 학점: ${totalSum - baseClassCredits - subjectCredits} 학점\n` +
+        `• 기타 이수 학점: ${subjectCredits} 학점\n` +
+        `========================================\n` +
+        `▶ 현재 누적 학점: ${totalSum} / 140 학점\n` +
+        `▶ 잔여 학점: ${leftCredits} 학점\n` +
+        advice
+    );
+});
+
+document.getElementById('btn-reset').addEventListener('click', function () {
+    txtSearch.value = "";
+    txtDept.value = "컴퓨터공학과";
+
+    document.getElementById('txt-univ').value = "동국대듀이카";
+    document.getElementById('txt-semester').value = "3";
+    document.getElementById('txt-subject-credits').value = "0";
+
+    document.getElementById('chk-net2').checked = false;
+    document.getElementById('chk-admin2').checked = false;
+    document.getElementById('chk-admin3').checked = false;
+    document.getElementById('chk-adsp').checked = false;
+    document.getElementById('chk-complit2').checked = false;
+
+    document.getElementById('combo-self1').selectedIndex = 0;
+    document.getElementById('combo-self2').selectedIndex = 0;
+
+    lblResName.textContent = "자격증 목록을 누르거나 검색창에 입력해 주세요.";
+    lblResCat.textContent = "분류 등급: -";
+    lblResCost.textContent = "표준 응시료: -";
+    certDateOutput.textContent = "시험 세부 연간 일정이 여기에 표시됩니다.";
+    recommendOutput.textContent = "학과별 연계 자격증 및 학점은행 특화 스케줄 로드맵이 다각도로 분석 제안됩니다.";
+
+    document.getElementById('lbl-total-score').textContent = "현재 누적 취득: 0 / 140 학점";
+    document.getElementById('lbl-left-score').textContent = "졸업까지 남은 잔여 학점: 140 학점";
+
+    const siblings = certListUl.querySelectorAll('li');
+    for (let i = 0; i < siblings.length; i++) {
+        siblings[i].classList.remove('active');
+    }
+
+    btnGoWeb.href = "#";
+    btnGoWeb.classList.remove('active');
+    btnGoWeb.style.pointerEvents = "none";
+});
+</script>
+
 </body>
 </html>
