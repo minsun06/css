@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>터치 그림자 효과</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      font-family: Arial, sans-serif;
+    }
+
+    .touch-card {
+      position: relative;
+      padding: 20px 42px;
+      border: none;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      color: white;
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      overflow: hidden;
+
+      box-shadow:
+        0 12px 25px rgba(124, 58, 237, 0.35),
+        0 6px 18px rgba(236, 72, 153, 0.25);
+
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
+
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .touch-card::before {
+      content: "";
+      position: absolute;
+      top: -60%;
+      left: -60%;
+      width: 220%;
+      height: 220%;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.35) 0%,
+        transparent 60%
+      );
+      transform: scale(0);
+      transition: transform 0.45s ease;
+    }
+
+    .touch-card:hover {
+      transform: translateY(-5px);
+      filter: brightness(1.08);
+      box-shadow:
+        0 20px 40px rgba(124, 58, 237, 0.45),
+        0 12px 30px rgba(236, 72, 153, 0.38);
+    }
+
+    .touch-card:hover::before {
+      transform: scale(1);
+    }
+
+    .touch-card:active {
+      transform: scale(0.95) translateY(2px);
+      box-shadow:
+        0 6px 14px rgba(124, 58, 237, 0.3),
+        0 3px 8px rgba(236, 72, 153, 0.2);
+    }
+
+    .touch-card span {
+      position: relative;
+      z-index: 2;
+    }
+  </style>
+</head>
+
+<body>
+  <button class="touch-card">
+    <span>터치하세요 ✨</span>
+  </button>
+</body>
+</html>
